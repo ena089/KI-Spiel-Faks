@@ -107,6 +107,21 @@
   .problem h2{margin:0;font-size:18px;color:#07203a;font-weight:700;}
   .problem p{margin:6px 0 0 0;color:var(--muted);font-size:13px;}
 
+  /* Reflexion / question box (light red) */
+  #reflexion{
+    display:none;
+    margin-top:12px;
+    padding:12px;
+    border-radius:10px;
+    background: linear-gradient(180deg,#fff5f5,#ffecec);
+    border:1px solid #ffd2d2;
+    color:#5a0b0b;
+    max-width:100%;
+    box-shadow: 0 4px 12px rgba(237, 100, 100, 0.06);
+    font-size:14px;
+    line-height:1.3;
+  }
+
   .cards{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -202,6 +217,15 @@
     font-size:13px;
   }
 
+  .ki-link{
+    display:inline-block;
+    margin-top:8px;
+    color:var(--accent);
+    font-size:13px;
+    text-decoration:underline;
+    word-break:break-all;
+  }
+
   .vote-badge{
     position:absolute;top:10px;left:10px;background:#042a47;color:white;padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px;display:none;
   }
@@ -293,7 +317,7 @@
 
   // ---- fixed: KIs must be a flat, valid array of objects (no syntax errors)
   const KIs = [
-    { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "https://www.microsoft.com/en-us/microsoft-365/copilot" },
+    { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "https://www.microsoft.com/en-us/copilot" },
     { label: "ChatGPT", info: "KI zum Schreiben, Erklären, Zusammenfassen und Entwickeln pädagogischer Ideen. Funktioniert in vielen Sprachen.", url: "https://chat.openai.com" },
     { label: "Notion AI", info: "KI in Notion zum Strukturieren, Sortieren und Schreiben von Notizen und Dokumenten.", url: "https://www.notion.so" },
     { label: "Grammarly", info: "KI für englische Texte. Prüft Grammatik, Rechtschreibung und Stil.", url: "https://www.grammarly.com" },
@@ -352,15 +376,15 @@
   // A set of clean, valid scenarios. Each options array should reference labels present in KIs (or use "Analog").
   const scenarios = [
     {
-      title: "In deiner Kindergartengruppe bearbeitet ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen welche speziell auf die dort ausgestellten Schiffe, Flugzeuge und Autos eingeht. Was kann dir dabei helfen die Führung zu buchen?",
+      title: "In deiner Kindergartengruppe bearbeitet ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen welche [...]", 
       options: ["Analog","ChatGPT","Microsoft Copilot","Perplexity"]
     },
     {
-      title: "In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh-binde-lied mit den Kindern machen, welches die Bewegung erklärt und untermalt. Wie gehst du vor?",
+      title: "In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh-binde-lied mit den Kindern machen, welches die Bewegung erklärt und untermalt. Wie gehst du[...]",
       options: ["Analog","AI Duet","AIVA","Suno"]
     },
     {
-      title: "Du arbeitest in einem Waldkindergarten. Jedes Jahr erstellen die Kinder ein Herbarium mit getrockneten Blättern und Blumen. Mark (5 J.) frägt dich nach dem Namen einer dir unbekannten Pflanze.",
+      title: "Du arbeitest in einem Waldkindergarten. Jedes Jahr erstellen die Kinder ein Herbarium mit getrockneten Blättern und Blumen. Mark (5 J.) frägt dich nach dem Namen einer dir unbekan[...]",
       options: ["Analog","Google Lense","Gemini","Perplexity"]
     },
     {
@@ -368,11 +392,11 @@
       options: ["Analog","Soundraw","Mubert","AIVA"]
     },
     {
-      title: "Das traditionelle Wintertheatherstück welches die Hort Kinder (6-10 Jahre) jedes Jahr aufführen steht vor der Tür. Normalerweise wählen die Kinder eines von fünf Winterbüchern, welches du dann in ein Theaterstück umwandelst. Dieses Jahr hast du erst 3 Bücher, welche die Kinder noch nicht kennen. Dir sind die Ideen für neue Winterbücher ausgegangen.",
+      title: "Das traditionelle Wintertheatherstück welches die Hort Kinder (6-10 Jahre) jedes Jahr aufführen steht vor der Tür. Normalerweise wählen die Kinder eines von fünf Winterbüchern[...]",
       options: ["Analog","NextThreeBooks","Speechify","TTSReader"]
     },
     {
-      title: "Du bist Erzieher:in in einem deutsch-französischen Kindergarten. Einige Eltern sprechen nur Französisch, andere nur Deutsch. Du willst ein Info-Blatt über das neue Bastelprojekt verschicken. Was kann dir dabei helfen?",
+      title: "Du bist Erzieher:in in einem deutsch-französischen Kindergarten. Einige Eltern sprechen nur Französisch, andere nur Deutsch. Du willst ein Info-Blatt über das neue Bastelprojekt [...]",
       options: ["Analog","DeepL Translate","Gemini","Envision AI"]
     },
     {
@@ -388,7 +412,7 @@
       options: ["Analog","Quizlet","QuizGecko","ChatGPT"]
     },
     {
-      title: "In deiner Krippe-Gruppe möchtest du mehr Angebote schaffen welche wissenschaftlich fundiert frühkindliche Sprachentwicklung fördern. Circa die Hälfte der Kinder in deinem Hort wachsen bilingual auf. Das möchtest du in deiner Förderung beachten. Allerdingst kennst du dich in der Thematik noch nicht so gut aus. Wie gehst du vor?",
+      title: "In deiner Krippe-Gruppe möchtest du mehr Angebote schaffen welche wissenschaftlich fundiert frühkindliche Sprachentwicklung fördern. Circa die Hälfte der Kinder in deinem Hort w[...]",
       options: ["Analog","Elicit","Glasp","ChatGPT"]
     }
   ];
@@ -431,12 +455,20 @@
   function renderScenarioForClient(){
     const s = scenarios[currentProblemIndex];
     problemTitle.textContent = s.title;
+    // hide reflexion box whenever we render a new scenario
+    reflexionEl.style.display = 'none';
+    reflexionEl.setAttribute('aria-hidden','true');
+    reflexionEl.textContent = '';
+
     cardsEl.innerHTML = '';
 
     s.options.forEach(optLabel=>{
-      const kiObj = KIs.find(k=>k.label===optLabel) || {label:optLabel, info:"(keine Info verfügbar)"};
+      const kiObj = KIs.find(k=>k.label===optLabel) || {label:optLabel, info:"(keine Info verfügbar)", url:null};
       const card = document.createElement('div');
       card.className = 'card';
+
+      const linkHtml = kiObj.url ? `<div class="ki-link-wrap"><a class="ki-link" href="${kiObj.url}" target="_blank" rel="noopener noreferrer">${kiObj.url}</a></div>` : '';
+
       card.innerHTML = `
         <div class="card-inner">
           <div class="card-face card-front" aria-hidden="false">
@@ -446,6 +478,7 @@
           </div>
           <div class="card-face card-back" aria-hidden="true">
             <div class="back-text">${kiObj.info}</div>
+            ${linkHtml}
             <button class="question-btn" aria-label="Reflexionsfrage">Frage</button>
           </div>
         </div>
@@ -485,6 +518,15 @@
         // set aria-hidden for reflexion container for screen readers
         reflexionEl.setAttribute('aria-hidden','false');
       });
+
+      // Prevent link clicks from flipping the card; allow normal navigation (opens in new tab)
+      const linkEl = card.querySelector('.ki-link');
+      if(linkEl){
+        linkEl.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          // default behavior opens in new tab because of target="_blank"
+        });
+      }
 
       cardsEl.appendChild(card);
     });
@@ -646,6 +688,10 @@
     if(!isPresenter) return;
     presenterResultsShown = false;
     clearWinnerState();
+    // Hide reflexion/question when moving to the next problem
+    reflexionEl.style.display = 'none';
+    reflexionEl.setAttribute('aria-hidden','true');
+    reflexionEl.textContent = '';
     const newIndex = (currentProblemIndex + 1) % scenarios.length;
     update(roomStateRef, { currentProblemIndex: newIndex, updatedAt: serverTimestamp() }).catch(err=>console.error(err));
     // reset votes for next problem:
