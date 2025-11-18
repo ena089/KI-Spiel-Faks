@@ -317,7 +317,7 @@
 
   // ---- fixed: KIs must be a flat, valid array of objects (no syntax errors)
   const KIs = [
-    { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "https://www.microsoft.com/en-us/copilot" },
+    { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "https://learn.microsoft.com/en-us/microsoft-365/copilot/" },
     { label: "ChatGPT", info: "KI zum Schreiben, Erklären, Zusammenfassen und Entwickeln pädagogischer Ideen. Funktioniert in vielen Sprachen.", url: "https://chat.openai.com" },
     { label: "Notion AI", info: "KI in Notion zum Strukturieren, Sortieren und Schreiben von Notizen und Dokumenten.", url: "https://www.notion.so" },
     { label: "Grammarly", info: "KI für englische Texte. Prüft Grammatik, Rechtschreibung und Stil.", url: "https://www.grammarly.com" },
@@ -376,43 +376,43 @@
   // A set of clean, valid scenarios. Each options array should reference labels present in KIs (or use "Analog").
   const scenarios = [
     {
-      title: "In deiner Kindergartengruppe bearbeitet ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen welche [...]", 
+      title: "In deiner Kindergartengruppe bearbeitet ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen, die altersgerechte Informationen bietet und Aktivitäten für verschiedene Altersgruppen vorschlägt.",
       options: ["Analog","ChatGPT","Microsoft Copilot","Perplexity"]
     },
     {
-      title: "In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh-binde-lied mit den Kindern machen, welches die Bewegung erklärt und untermalt. Wie gehst du[...]",
+      title: "In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh‑binde‑Lied mit den Kindern entwickeln, das die Bewegungsabfolge erklärt und musikalisch untermalt, damit die Kinder leichter lernen und üben.",
       options: ["Analog","AI Duet","AIVA","Suno"]
     },
     {
-      title: "Du arbeitest in einem Waldkindergarten. Jedes Jahr erstellen die Kinder ein Herbarium mit getrockneten Blättern und Blumen. Mark (5 J.) frägt dich nach dem Namen einer dir unbekan[...]",
+      title: "Du arbeitest in einem Waldkindergarten. Jedes Jahr erstellen die Kinder ein Herbarium mit getrockneten Blättern und Blumen. Mark (5 J.) fragt dich nach dem Namen einer dir unbekannten Pflanze — wie findest du kindgerechte Informationen dazu?",
       options: ["Analog","Google Lense","Gemini","Perplexity"]
     },
     {
-      title: "Für die Hausaufgabenzeit in deiner Tagesheim-Klasse möchtest du während der Stillarbeit Hintergrundmusik laufen lassen.",
+      title: "Für die Hausaufgabenzeit in deiner Tagesheim‑Klasse möchtest du während der Stillarbeit dezent Hintergrundmusik laufen lassen, die die Konzentration fördert und nicht ablenkt.",
       options: ["Analog","Soundraw","Mubert","AIVA"]
     },
     {
-      title: "Das traditionelle Wintertheatherstück welches die Hort Kinder (6-10 Jahre) jedes Jahr aufführen steht vor der Tür. Normalerweise wählen die Kinder eines von fünf Winterbüchern[...]",
+      title: "Das traditionelle Wintertheaterstück, das die Hortkinder (6–10 Jahre) jedes Jahr aufführen, steht vor der Tür. Normalerweise wählen die Kinder eines von fünf Winterbüchern aus und inszenieren Teile davon — dieses Jahr möchtest du mehr partizipative Elemente und frische Ideen sammeln.",
       options: ["Analog","NextThreeBooks","Speechify","TTSReader"]
     },
     {
-      title: "Du bist Erzieher:in in einem deutsch-französischen Kindergarten. Einige Eltern sprechen nur Französisch, andere nur Deutsch. Du willst ein Info-Blatt über das neue Bastelprojekt [...]",
+      title: "Du bist Erzieher:in in einem deutsch‑französischen Kindergarten. Einige Eltern sprechen nur Französisch, andere nur Deutsch. Du willst ein Info‑Blatt über das neue Bastelprojekt erstellen, das in beiden Sprachen klar, kurz und ansprechend ist.",
       options: ["Analog","DeepL Translate","Gemini","Envision AI"]
     },
     {
-      title: "Du willst eine kurze Umfrage an die Eltern schicken, um Feedback zu einem neuen Projekt zu sammeln. Das Feedback sollte anonym sein.",
+      title: "Du willst eine kurze Umfrage an die Eltern schicken, um Feedback zu einem neuen Projekt zu sammeln. Das Feedback sollte anonym sein und sowohl offene als auch geschlossene Fragen enthalten.",
       options: ["Analog","ChatGPT","Microsoft Copilot","ConkerAI"]
     },
     {
-      title: "Du möchtest für die kommende Elternversammlung einen ansprechenden Aushang erstellen, der die wichtigsten Infos zur Anmeldung, Uhrzeiten und Themen enthält.",
+      title: "Du möchtest für die kommende Elternversammlung einen ansprechenden Aushang erstellen, der die wichtigsten Infos zur Anmeldung, Uhrzeiten und Themen enthält und leicht gedruckt sowie digital geteilt werden kann.",
       options: ["Analog","Canva Magic Studio","DALL·E 3","AutoDraw"]
     },
     {
-      title: "Ihr wollt aus den Erzählungen der Kinder Quizaufgaben erstellen. Welche Tools können dabei unterstützen?",
+      title: "Ihr wollt aus den Erzählungen der Kinder Quizaufgaben erstellen. Welche Tools können dabei unterstützen, passende Fragen automatisch zu generieren und unterschiedliche Schwierigkeitsstufen anzubieten?",
       options: ["Analog","Quizlet","QuizGecko","ChatGPT"]
     },
     {
-      title: "In deiner Krippe-Gruppe möchtest du mehr Angebote schaffen welche wissenschaftlich fundiert frühkindliche Sprachentwicklung fördern. Circa die Hälfte der Kinder in deinem Hort w[...]",
+      title: "In deiner Krippe‑Gruppe möchtest du mehr Angebote schaffen, die wissenschaftlich fundierte frühkindliche Sprachentwicklung fördern. Circa die Hälfte der Kinder in deiner Gruppe wächst mehrsprachig auf — wie kannst du inklusive Aktivitäten planen?",
       options: ["Analog","Elicit","Glasp","ChatGPT"]
     }
   ];
