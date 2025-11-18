@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KI Flashcards – Pädagogik</title>
+<title>KI Flashcards</title>
 
 <style>
     body {
@@ -16,17 +16,21 @@
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 25px;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
     }
 
     .card-container {
         display: flex;
         gap: 20px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
 
     .card {
-        width: 250px;
-        height: 160px;
+        width: 260px;
+        height: 170px;
         perspective: 1000px;
         cursor: pointer;
     }
@@ -65,93 +69,143 @@
 
     a {
         color: #0066cc;
+        font-weight: bold;
         text-decoration: none;
     }
     a:hover {
         text-decoration: underline;
     }
+
+    #nav {
+        margin-top: 25px;
+        display: flex;
+        gap: 10px;
+    }
+
+    button {
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background: #0066cc;
+        color: white;
+        font-size: 16px;
+    }
 </style>
 </head>
 <body>
 
-<h1>🎓 KI-Flashcards für pädagogische Situationen</h1>
-
 <div id="situationBox" class="situation"></div>
 <div id="cards" class="card-container"></div>
 
+<div id="nav">
+    <button onclick="prevScenario()">← Zurück</button>
+    <button onclick="nextScenario()">Weiter →</button>
+</div>
+
 <script>
-/* ============================
-   KIs – komplett ohne Icons
-   ============================ */
+/* ==========================================================
+   KIs mit anklickbaren Titeln (als URL verknüpft)
+   ========================================================== */
 const KIs = [
-  {label:"Microsoft Copilot", info:"In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente.", url:"https://www.microsoft.com"},
-  {label:"ChatGPT", info:"KI zum Schreiben, Erklären und Planen. Funktioniert in vielen Sprachen.", url:"https://chat.openai.com"},
-  {label:"Notion AI", info:"Strukturiert Notizen, erstellt Texte und hilft beim Organisieren.", url:"https://www.notion.so"},
-  {label:"Grammarly", info:"KI für englische Texte – prüft Grammatik und Stil.", url:"https://www.grammarly.com"},
-  {label:"LanguageTool", info:"KI für deutsche Grammatik- und Stilprüfung.", url:"https://languagetool.org"},
-  {label:"Canva Magic Studio", info:"Erstellt Designs wie Plakate, Elterninfos oder Posts automatisch.", url:"https://www.canva.com"},
-  {label:"Adobe Firefly", info:"Bildbearbeitung & kreative Mediengestaltung mit KI.", url:"https://firefly.adobe.com"},
-  {label:"Bing Image Creator", info:"Kostenloser KI-Bildgenerator.", url:"https://www.bing.com/create"},
-  {label:"DALL·E 3", info:"Erzeugt Illustrationen, Comics und pädagogische Bilder.", url:"https://chat.openai.com"},
-  {label:"Soundraw", info:"Erstellt Musik nach Stimmung und Tempo.", url:"https://soundraw.io"},
-  {label:"Mubert", info:"Erzeugt endlose, lizenzfreie Musik.", url:"https://mubert.com"},
-  {label:"AIVA", info:"Komponiert Musik für Theater oder Videos.", url:"https://www.aiva.ai"},
-  {label:"Scribble Diffusion", info:"Macht aus Kinderzeichnungen digitale Illustrationen.", url:"https://scribblediffusion.com"},
-  {label:"AutoDraw", info:"Verbessert Kritzeleien automatisch.", url:"https://www.autodraw.com"},
-  {label:"Gemini", info:"Google-KI zum Erklären und Antworten.", url:"https://gemini.google.com"},
-  {label:"Claude", info:"Reflektierte Text-KI mit Fokus auf Ethik.", url:"https://claude.ai"},
-  {label:"Speechify", info:"Liest Texte mit realistischen Stimmen vor.", url:"https://speechify.com"},
-  {label:"ElevenLabs", info:"Professionelle Sprachsynthese mit Emotionen.", url:"https://elevenlabs.io"},
-  {label:"TTSReader", info:"Einfaches, kostenloses Vorlesetool.", url:"https://ttsreader.com"},
-  {label:"Quizlet", info:"Erstellt automatisch Lernkarten und Quiz.", url:"https://quizlet.com"},
-  {label:"Kahoot!", info:"Interaktive Quizplattform.", url:"https://kahoot.com"},
-  {label:"Educandy", info:"Einfache Lernspiele ohne Programmieren.", url:"https://www.educandy.com"},
-  {label:"Lumi Education (H5P)", info:"Offline-fähige Lernmodule, Open Source.", url:"https://lumi.education"},
-  {label:"DeepL Translate", info:"Präziser Übersetzer.", url:"https://www.deepl.com"},
-  {label:"DeepL Write", info:"Verbessert Stil und Verständlichkeit.", url:"https://www.deepl.com/write"},
+  {label:"Microsoft Copilot", info:"In MS-Programme integrierter Assistent. Schreibt, fasst zusammen, erstellt Dokumente.", url:"https://www.microsoft.com"},
+  {label:"ChatGPT", info:"KI zum Schreiben, Erklären, Planen, Ideen entwickeln – mehrsprachig.", url:"https://chat.openai.com"},
+  {label:"Notion AI", info:"Schreibt, sortiert und strukturiert Notizen & Inhalte.", url:"https://www.notion.so"},
+  {label:"Grammarly", info:"Verbessert englische Texte: Grammatik, Stil, Struktur.", url:"https://www.grammarly.com"},
+  {label:"LanguageTool", info:"Deutsche Grammatik- und Stilprüfung.", url:"https://languagetool.org"},
+  {label:"Canva Magic Studio", info:"Erstellt automatisch Designs wie Plakate, Aushänge und Elterninfos.", url:"https://www.canva.com"},
+  {label:"Adobe Firefly", info:"Kreative KI für Bildbearbeitung.", url:"https://firefly.adobe.com"},
+  {label:"Bing Image Creator", info:"Kostenloser KI-Bildgenerator (DALL·E-Technologie).", url:"https://www.bing.com/create"},
+  {label:"DALL·E 3", info:"Erzeugt hochwertige Illustrationen, Comics und Kinderbilder.", url:"https://chat.openai.com"},
+  {label:"Soundraw", info:"Erstellt Musik & Sounds nach Stimmung.", url:"https://soundraw.io"},
+  {label:"Mubert", info:"Endlose, lizenzfreie KI-Musik.", url:"https://mubert.com"},
+  {label:"AIVA", info:"Komponiert Musik für Projekte & Theater.", url:"https://www.aiva.ai"},
+  {label:"Scribble Diffusion", info:"Wandelt Kinderkritzeleien in Illustrationen um.", url:"https://scribblediffusion.com"},
+  {label:"AutoDraw", info:"Erkennt Skizzen & wandelt sie in Symbole um.", url:"https://www.autodraw.com"},
+  {label:"Gemini", info:"Google-KI erklärt Wissen & päd. Zusammenhänge.", url:"https://gemini.google.com"},
+  {label:"Claude", info:"Sehr reflektierte Text-KI, ideal für sensible Themen.", url:"https://claude.ai"},
+  {label:"Speechify", info:"Liest Texte realistisch vor.", url:"https://speechify.com"},
+  {label:"ElevenLabs", info:"Emotionale KI-Stimmen.", url:"https://elevenlabs.io"},
+  {label:"TTSReader", info:"Kostenloses Vorlesen ohne Anmeldung.", url:"https://ttsreader.com"},
+  {label:"Quizlet", info:"Erstellt automatisch Lernkarten & Quiz.", url:"https://quizlet.com"},
+  {label:"Kahoot!", info:"Quiz für Gruppen & Workshops.", url:"https://kahoot.com"},
+  {label:"Educandy", info:"Einfache Lernspiele, kinderleicht gemacht.", url:"https://www.educandy.com"},
+  {label:"Lumi Education (H5P)", info:"Interaktive Lerninhalte, offline nutzbar.", url:"https://lumi.education"},
+  {label:"DeepL Translate", info:"Sehr präziser Übersetzer.", url:"https://www.deepl.com"},
+  {label:"DeepL Write", info:"Verbessert Stil & Textqualität.", url:"https://www.deepl.com/write"},
   {label:"Canva Magic Write", info:"Text-KI in Canva.", url:"https://www.canva.com"},
   {label:"Perplexity", info:"KI-Suchmaschine mit Quellenangaben.", url:"https://perplexity.ai"},
-  {label:"Elicit", info:"Findet und fasst Studien zusammen.", url:"https://elicit.org"},
-  {label:"Askify", info:"Analysiert und fasst YouTube-Videos zusammen.", url:"https://www.askify.ai"},
-  {label:"Glasp", info:"Notizen, Markierungen & KI-Zusammenfassungen.", url:"https://glasp.co"},
-  {label:"Teachable Machine", info:"Kinder trainieren eigene kleine KI-Modelle.", url:"https://teachablemachine.withgoogle.com"},
-  {label:"Poem Portraits", info:"Poesie-KI für kreative Projekte.", url:"https://artsexperiments.withgoogle.com/poemportraits"},
-  {label:"AI Duet", info:"Musik-KI reagiert live auf gespielte Töne.", url:"https://experiments.withgoogle.com/ai/ai-duet"},
-  {label:"Runway ML", info:"Video-KI für Clips & Animationen.", url:"https://runwayml.com"},
-  {label:"Pika Labs", info:"Text-zu-Video KI.", url:"https://pika.art"},
-  {label:"MyHeritage Deep Nostalgia", info:"Animiert Gesichter auf Fotos.", url:"https://www.myheritage.de/deep-nostalgia"},
-  {label:"InVideo", info:"Automatische Videoerstellung.", url:"https://invideo.io"},
-  {label:"Muzify", info:"Erstellt Songs aus Textvorgaben.", url:"https://muzify.ai"},
-  {label:"QuizGecko", info:"Erstellt Quizfragen automatisch.", url:"https://quizgecko.com"},
-  {label:"Suno", info:"Erstellt komplette Songs mit Gesang.", url:"https://suno.com"},
-  {label:"YouTube Transcript Tools", info:"Transkripte aus YouTube-Videos.", url:"https://chromewebstore.google.com"},
-  {label:"NextThreeBooks", info:"Empfiehlt Bücher auf Basis deiner Vorlieben.", url:"https://nextthreebooks.com"},
-  {label:"ConkerAI", info:"Quiz, Tests & Lernmaterialien.", url:"https://conker.ai"},
-  {label:"NotebookLM", info:"Analysiert PDFs & Notizen.", url:"https://notebooklm.google"},
+  {label:"Elicit", info:"Fasst wissenschaftliche Studien zusammen.", url:"https://elicit.org"},
+  {label:"Askify", info:"Fasst YouTube-Videos automatisch zusammen.", url:"https://www.askify.ai"},
+  {label:"Glasp", info:"Markiert & fasst Texte & Videos zusammen.", url:"https://glasp.co"},
+  {label:"Teachable Machine", info:"Kinder erstellen eigene KI-Modelle.", url:"https://teachablemachine.withgoogle.com"},
+  {label:"Poem Portraits", info:"Kreative Poesie-KI.", url:"https://artsexperiments.withgoogle.com/poemportraits"},
+  {label:"AI Duet", info:"Musik-KI reagiert auf gespielte Töne.", url:"https://experiments.withgoogle.com/ai/ai-duet"},
+  {label:"Runway ML", info:"Video-KI für Animationen & Clips.", url:"https://runwayml.com"},
+  {label:"Pika Labs", info:"KI-Video aus Text oder Bildern.", url:"https://pika.art"},
+  {label:"MyHeritage Deep Nostalgia", info:"Animiert alte Fotos.", url:"https://www.myheritage.de/deep-nostalgia"},
+  {label:"InVideo", info:"Erstellt Videos automatisch.", url:"https://invideo.io"},
+  {label:"Muzify", info:"Musik aus Text generieren.", url:"https://muzify.ai"},
+  {label:"QuizGecko", info:"Erstellt Quiz aus Texten & Webseiten.", url:"https://quizgecko.com"},
+  {label:"Suno", info:"Komplette Songs inkl. Gesang.", url:"https://suno.com"},
+  {label:"YouTube Transcript Tools", info:"Erstellt YouTube-Transkripte.", url:"https://chromewebstore.google.com"},
+  {label:"NextThreeBooks", info:"Bücherempfehlungen per KI.", url:"https://nextthreebooks.com"},
+  {label:"ConkerAI", info:"Quiz & Lernmaterialien.", url:"https://conker.ai"},
+  {label:"NotebookLM", info:"Analysiert PDFs, Notizen & Dokumente.", url:"https://notebooklm.google"},
 ];
 
-/* =============================
-   SITUATIONEN
-   ============================= */
+/* ==========================================================
+   SITUATIONEN – 10 Beispiele
+   ========================================================== */
 const scenarios = [
   {
-    title:"In deiner Kindergruppe habt ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen, welche speziell auf die Altersgruppe zugeschnitten ist. Welche Herangehensweise planst du?",
-    options:["ChatGPT","DeepL Translate","Perplexity","Analog"]
+    title:"Du planst einen Ausflug ins Deutsche Museum und möchtest eine Führung für Kinder buchen. Welche Herangehensweise wählst du?",
+    options:["ChatGPT","Perplexity","DeepL Translate","Analog"]
   },
   {
-    title:"Du möchtest ein Elternschreiben zum Thema Medienkompetenz verfassen und suchst Formulierungen, die klar, wertschätzend und leicht verständlich sind.",
-    options:["DeepL Write","ChatGPT","LanguageTool","Analog"]
+    title:"Du musst ein Elternschreiben zum Thema Medienzeit formulieren. Es soll leicht verständlich und wertschätzend sein.",
+    options:["DeepL Write","LanguageTool","ChatGPT","Analog"]
   },
   {
-    title:"Die Kinder möchten ein eigenes Bilderbuch gestalten. Du brauchst passende Illustrationen, die kindgerecht aussehen.",
-    options:["DALL·E 3","Bing Image Creator","Adobe Firefly","Scribble Diffusion"]
+    title:"Die Kinder möchten ein eigenes Bilderbuch gestalten – du brauchst passende Illustrationen.",
+    options:["DALL·E 3","Adobe Firefly","Bing Image Creator","Scribble Diffusion"]
+  },
+  {
+    title:"Ihr möchtet im Hort ein Wissensquiz zum Thema Wasser durchführen.",
+    options:["Quizlet","Kahoot!","ConkerAI","Analog"]
+  },
+  {
+    title:"Du willst ein komplexes YouTube-Erklärvideo schnell verstehen.",
+    options:["Askify","Glasp","NotebookLM","Analog"]
+  },
+  {
+    title:"Für ein Theaterprojekt brauchst du stimmungsvolle Hintergrundmusik.",
+    options:["AIVA","Suno","Muzify","Analog"]
+  },
+  {
+    title:"Du möchtest mehrsprachige Eltern über ein Projekt informieren.",
+    options:["DeepL Translate","ChatGPT","LanguageTool","Analog"]
+  },
+  {
+    title:"Du planst einen Elternabend und willst ein schönes Poster erstellen.",
+    options:["Canva Magic Studio","Adobe Firefly","Canva Magic Write","Analog"]
+  },
+  {
+    title:"Die Kinder wollen ihre Geräusche im Raum aufnehmen und experimentell verarbeiten.",
+    options:["Teachable Machine","AI Duet","Soundraw","Analog"]
+  },
+  {
+    title:"Du brauchst für eine Präsentation wissenschaftliche Hintergrundinfos.",
+    options:["Perplexity","Elicit","Claude","Analog"]
   }
 ];
 
-/* ============================
-   Flashcards generieren
-   ============================ */
-function loadScenario(i=0) {
+let current = 0;
+
+/* ==========================================================
+   Szenario laden
+   ========================================================== */
+function loadScenario(i = 0) {
     const s = scenarios[i];
     document.getElementById("situationBox").innerText = s.title;
 
@@ -165,12 +219,13 @@ function loadScenario(i=0) {
         card.className = "card";
         card.innerHTML = `
             <div class="inner">
-                <div class="side front">${ki.label}</div>
+                <div class="side front">
+                    <a href="${ki.url}" target="_blank">${ki.label}</a>
+                </div>
                 <div class="side back">
                     <div>
-                        <b>${ki.label}</b><br><br>
-                        ${ki.info}<br><br>
-                        <a href="${ki.url}" target="_blank">🔗 Zur Website</a>
+                        <a href="${ki.url}" target="_blank">${ki.label}</a><br><br>
+                        ${ki.info}
                     </div>
                 </div>
             </div>
@@ -180,11 +235,22 @@ function loadScenario(i=0) {
     });
 }
 
+/* Navigation */
+function nextScenario() {
+    current = (current + 1) % scenarios.length;
+    loadScenario(current);
+}
+function prevScenario() {
+    current = (current - 1 + scenarios.length) % scenarios.length;
+    loadScenario(current);
+}
+
 loadScenario(0);
 </script>
 
 </body>
 </html>
+
 
 
 
