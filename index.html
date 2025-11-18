@@ -34,7 +34,6 @@
     box-shadow:0 8px 30px rgba(2,6,23,.08);
   }
 
-  /* Top presenter control bar */
   .controls {
     display:flex;
     justify-content:flex-end;
@@ -55,7 +54,6 @@
     color:#1d1d1d;
   }
 
-  /* Situation box */
   .situation {
     background:white;
     border-radius:10px;
@@ -64,7 +62,6 @@
     margin-bottom:14px;
   }
 
-  /* Cards layout */
   .cards {
     display:flex;
     gap:12px;
@@ -147,7 +144,6 @@
     cursor:pointer;
   }
 
-  /* Winner mega effect */
   .card.winner {
     background:var(--winner-bg)!important;
     transform:rotate(-10deg) scale(1.15);
@@ -181,16 +177,9 @@
 
 </div>
 
-
-<!-- Firebase + Realtime Sync -->
-<script type="module">
-  
-  <!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import {
-    getDatabase, ref, onValue, set, update, runTransaction, serverTimestamp, get
-  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAaDK-oX9G-DXBRITymIo5SJiksoamOXCU",
@@ -201,196 +190,170 @@
     messagingSenderId: "510028538504",
     appId: "1:510028538504:web:2ad71ab74dc0c2682cf53d"
   };
+
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-const scenarios = [
+
+  const scenarios = [
     {title:"In deiner Kindergruppe habt ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen welche speziell auf die dort ausgestellten Schiffe, Flugzeuge und Autos eingeht. Was kann dir dabei helfen die Führung zu buchen?", options:["ChatGPT","Microsoft Copilot","DeepL Write","Analog"]},
     {title:"Du arbeitest in einem Walkindergarten. Jedes Jahr erstellen die Kinder ein Buch mit getrockneten Blättern, Blumen und weiteren Pflanzen. Meist sind es Blätter die du kennst. Mick (5 Jahre) frägt dich diesmal bei einer Pflanze die du nicht kennst nach ihrem Namen.", options:["QuizGecko","Perplexity","Google Lense","Analog"]},
     {title:"Die Kinder wollen ein eigenes Bilderbuch. Du brauchst Illustrationen. Was probierst du?", options:["DALL·E 3","Canva Magic Studio","Notion AI","Analog"]},
-     {title:" Das traditionelle Wintertheatherstück welches die Hort Kinder (6-10 Jahre) jedes Jahr aufführen steht vor der Tür. Normalerweise wählen die Kinder eines von fünf Winterbüchern, welches du dann in ein Theaterstück umwandelst. Dieses Jahr hast du erst 3 Bücher, welche die Kinder noch nicht kennen. Dir sind die Ideen für neue Winterbücher ausgegangen.", options:["Poem Portraits","Canva Magic Studio","NextThreeBooks","Analog"]},   
+    {title:"Das traditionelle Wintertheatherstück welches die Hort Kinder (6-10 Jahre) jedes Jahr aufführen steht vor der Tür. Normalerweise wählen die Kinder eines von fünf Winterbüchern, welches du dann in ein Theaterstück umwandelst. Dieses Jahr hast du erst 3 Bücher, welche die Kinder noch nicht kennen. Dir sind die Ideen für neue Winterbücher ausgegangen.", options:["Poem Portraits","Canva Magic Studio","NextThreeBooks","Analog"]},
     {title:"In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh-binde-lied mit den Kindern machen, welches die Bewegung erklärt und untermalt. Wie gehst du vor?", options:["Muzify","Suno","Soundraw","Analog"]}
   ];
 
-const KI_DATA = [
-  { label:"ChatGPT", info:"KI Sprachmodell für Texte & Ideen", url:"https://chat.openai.com" },
-  { label:"YouTube", info:"Videos & Tutorials zu allen Themen", url:"https://youtube.com" },
-  { label:"Google Lens", info:"Foto machen & KI analysiert Inhalte", url:"https://lens.google" },
-  { label:"Gemini", info:"Multimodale KI von Google", url:"https://gemini.google.com" },
-  { label:"Analog", info:"Fragen, Bücher, Freunde, eigene Ideen", url:null }
-];
+   const defaultInfos = label => ({
+    { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "https://www.microsoft.com" },
+    { label: "ChatGPT", info: "KI zum Schreiben, Erklären, Zusammenfassen und Entwickeln pädagogischer Ideen. Funktioniert in vielen Sprachen.", url: "https://chat.openai.com" },
+    { label: "Notion AI", info: "KI in Notion zum Strukturieren, Sortieren und Schreiben von Notizen und Dokumenten.", url: "https://www.notion.so" },
+    { label: "Grammarly", info: "KI für englische Texte. Prüft Grammatik, Rechtschreibung und Stil.", url: "https://www.grammarly.com" },
+    { label: "LanguageTool", info: "KI für deutsche Texte. Prüft Grammatik, Stil und Satzbau. Browser-Add-on verfügbar.", url: "https://languagetool.org" },
+    { label: "Canva Magic Studio", info: "KI zur Gestaltung von Flyern, Plakaten, Elterninfos und Präsentationen.", url: "https://www.canva.com" },
+    { label: "Adobe Firefly", info: "Kreative KI für Bildbearbeitung, Mediengestaltung und Fotoverbesserung.", url: "https://firefly.adobe.com" },
+    { label: "Bing Image Creator", info: "Kostenloser Bildgenerator basierend auf DALL·E-Modellen.", url: "https://www.bing.com/create" },
+    { label: "DALL·E 3", info: "Bild-KI von OpenAI für Illustrationen, Comics und pädagogische Materialien.", url: "https://chat.openai.com" },
+    { label: "Soundraw", info: "Musikgenerator, erstellt Songs nach Stimmung, Tempo und Thema.", url: "https://soundraw.io" },
+    { label: "Mubert", info: "KI erzeugt endlose, lizenzfreie Musikstreams – ideal für Hintergrundmusik.", url: "https://mubert.com" },
+    { label: "AIVA", info: "Komponiert Musik für Projekte, Theater oder Videos in vielen Stilen.", url: "https://www.aiva.ai" },
+    { label: "Scribble Diffusion", info: "Verwandelt Kinderkritzeleien in klare digitale Zeichnungen.", url: "https://scribblediffusion.com" },
+    { label: "AutoDraw", info: "Google-Tool, das Skizzen automatisch erkennt und verbessert.", url: "https://www.autodraw.com" },
+    { label: "Gemini", info: "Google-KI, die Wissen erklärt, Antworten gibt und Unterrichtsideen liefert.", url: "https://gemini.google.com" },
+    { label: "Claude", info: "KI mit Fokus auf Sicherheit, Ethik und reflektierte Antworten.", url: "https://claude.ai" },
+    { label: "Speechify", info: "Liest Texte mit natürlich klingenden Stimmen vor.", url: "https://speechify.com" },
+    { label: "ElevenLabs", info: "Professionelle Text-to-Speech-KI mit emotionalen Stimmen.", url: "https://elevenlabs.io" },
+    { label: "TTSReader", info: "Kostenloses Vorlesetool ohne Anmeldung.", url: "https://ttsreader.com" },
+    { label: "Quizlet", info: "Lernplattform; KI erstellt automatisch Quizfragen aus Texten.", url: "https://quizlet.com" },
+    { label: "Kahoot!", info: "Interaktive Lernspiele für Gruppen und Teams.", url: "https://kahoot.com" },
+    { label: "Educandy", info: "Erstellt einfache Lernspiele ohne Programmierkenntnisse.", url: "https://www.educandy.com" },
+    { label: "Lumi Education (H5P)", info: "Open-Source-Tool für interaktive Lerninhalte, offline nutzbar.", url: "https://lumi.education" },
+    { label: "DeepL Translate", info: "Präziser Übersetzer für viele Sprachen.", url: "https://www.deepl.com" },
+    { label: "DeepL Write", info: "Stilverbesserer für deutsche und englische Texte.", url: "https://www.deepl.com/write" },
+    { label: "Canva Magic Write", info: "Text-KI in Canva zur Erstellung von Aushängen und Posts.", url: "https://www.canva.com" },
+    { label: "Perplexity", info: "KI-Suchmaschine mit Quellenangaben.", url: "https://perplexity.ai" },
+    { label: "Elicit", info: "KI zur Recherche von Studien und Wissensquellen.", url: "https://elicit.org" },
+    { label: "Askify", info: "Fasst YouTube-Videos automatisch zusammen.", url: "https://www.askify.ai" },
+    { label: "Glasp", info: "Markiert und fasst Fachtexte und Videos zusammen.", url: "https://glasp.co" },
+    { label: "Teachable Machine", info: "Kinder können eigene KI-Modelle für Bilder und Geräusche trainieren.", url: "https://teachablemachine.withgoogle.com" },
+    { label: "Poem Portraits", info: "Kreative Text- und Bild-KI für Poesie-Projekte.", url: "https://artsexperiments.withgoogle.com/poemportraits" },
+    { label: "AI Duet", info: "Musik-KI, die live auf gespielte Melodien reagiert.", url: "https://experiments.withgoogle.com/ai/ai-duet" },
+    { label: "Runway ML", info: "Video-KI, die Clips, Animationen und Effekte erzeugt.", url: "https://runwayml.com" },
+    { label: "Pika Labs", info: "Erstellt KI-Videos aus Texten oder Bildern.", url: "https://pika.art" },
+    { label: "MyHeritage Deep Nostalgia", info: "Animiert Portraitfotos so, dass Gesichter sich bewegen.", url: "https://www.myheritage.de/deep-nostalgia" },
+    { label: "InVideo", info: "Automatischer Videoeditor, generiert Clips und Sprechertexte.", url: "https://invideo.io" },
+    { label: "Muzify", info: "KI für Musik- und Songerstellung aus Textvorgaben.", url: "https://muzify.ai" },
+    { label: "QuizGecko", info: "Erstellt Quizfragen aus Texten oder Webseiten.", url: "https://quizgecko.com" },
+    { label: "Suno", info: "KI, die komplette Songs mitsamt Gesang generiert.", url: "https://suno.com" },
+    { label: "YouTube Transcript Tools", info: "Erstellt Transkripte von YouTube-Videos.", url: "https://chromewebstore.google.com" },
+    { label: "NextThreeBooks", info: "Buch-KI empfiehlt ähnliche Titel basierend auf deinen Lieblingsbüchern.", url: "https://nextthreebooks.com" },
+    { label: "ConkerAI", info: "Erstellt Lernmaterialien, Quizfragen und Tests für Bildung.", url: "https://conker.ai" },
+    { label: "NotebookLM", info: "Google-KI analysiert PDF-Dokumente, Notizen und Texte.", url: "https://notebooklm.google" },
+    { label: "Google Lense", info: "Bilderkennung durch Smartphone-Kamera. Kann Objekte, Texte, Pflanzen, Tiere und Sehenswürdigkeiten erkennen."},
+    { label: "Analog", info: "Analoge Herangehensweisen: Kolleg:innen fragen, Bücher nutzen, Methoden aus Fachliteratur anwenden, im Team reflektieren.", url: null }
+   }[label] || "Keine Beschreibung vorhanden");
+  
 
 
+  const room = "klasse01";
+  let clientId = "user-" + Math.random().toString(36).substring(2,9);
+  let presenter = null;
+  let index = 0;
+  let votes = {};
+  let voting = false;
 
-const room      = "klasse01";
-let clientId    = "user-" + Math.random().toString(36).substring(2,9);
-let presenterId = null;
-let currentIdx  = 0;
-let votes       = {};
-let votingOpen  = false;
+  const situationEl = document.getElementById("situation");
+  const cardsEl = document.getElementById("cards");
 
-/* DOM */
-const situationEl = document.getElementById("situation");
-const cardsEl     = document.getElementById("cards");
-const noteEl      = document.getElementById("note");
-
-
-/* ----------------------------------------------------------------------
-   🚀 Render Scenario & Cards — ALWAYS 4 cards
----------------------------------------------------------------------- */
-function renderScenario(index) {
-  const s = scenarios[index];
-  situationEl.textContent = s.title;
-  cardsEl.innerHTML = "";
-
-  // Guarantee 4 cards, fill with Analog if needed
-  const optionList = [...s.options];
-  while(optionList.length < 4) optionList.push("Analog");
-
-  optionList.forEach(label => {
-    const ki = KI_DATA.find(x => x.label.toLowerCase() === label.toLowerCase()) || 
-              { label, info:"Keine Info vorhanden", url:null };
-
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
+  function render(i){
+    const s = scenarios[i];
+    situationEl.textContent = s.title;
+    cardsEl.innerHTML = "";
+    
+    s.options.forEach(label=>{
+      const card=document.createElement("div");
+      card.className="card";
+      card.innerHTML=`
       <div class="card-inner">
         <div class="card-face card-front">
           <div class="vote-badge">0</div>
-          <button class="fav-btn">☆</button>
-          <a class="label-link" data-label="${ki.label}" 
-             href="${ki.url || '#'}" target="_blank">${ki.label}</a>
+          <button class="fav-btn">★</button>
+          <span class="label-link">${label}</span>
         </div>
         <div class="card-face card-back">
-          <b>${ki.label}</b><br>${ki.info}<br>
-          ${ki.url ? `<a href="${ki.url}" target="_blank">Mehr erfahren</a>` : ""}
+          <b>${label}</b><br>${defaultInfos(label)}
         </div>
-      </div>
-    `;
-
-    // Flip on click
-    card.addEventListener("click", e => {
-      if(e.target.classList.contains("fav-btn")) return;
-      card.classList.toggle("flipped");
+      </div>`;
+      card.addEventListener("click", e=>{
+        if(e.target.classList.contains("fav-btn")) return;
+        card.classList.toggle("flipped");
+      });
+      card.querySelector(".fav-btn").onclick=()=>{
+        const choice=votes[clientId]===label?null:label;
+        set(ref(db,`rooms/${room}/votes/${clientId}`),choice);
+      };
+      cardsEl.appendChild(card);
     });
-
-    // Voting star click
-    card.querySelector(".fav-btn").addEventListener("click", async e => {
-      e.stopPropagation();
-      const newChoice = (votes[clientId] === ki.label ? null : ki.label);
-      await set(ref(db, `/rooms/${room}/votes/${clientId}`), newChoice);
-    });
-
-    cardsEl.appendChild(card);
-  });
-
-  updateUIFromVotes();
-}
-
-
-/* ----------------------------------------------------------------------
-   🧮 Tally + Winner Highlight
----------------------------------------------------------------------- */
-function updateUIFromVotes() {
-  const counts = {};
-  Object.values(votes).forEach(v => { if(v) counts[v] = (counts[v]||0) + 1 });
-
-  document.querySelectorAll(".card").forEach(card=>{
-    const label = card.querySelector(".label-link").dataset.label;
-    const badge = card.querySelector(".vote-badge");
-    const count = counts[label] || 0;
-
-    badge.textContent = count;
-    badge.style.display = votingOpen ? "block" : "none";
-    card.classList.remove("winner");
-  });
-
-  if(!votingOpen && Object.values(counts).length > 0) highlightWinners(counts);
-}
-
-function highlightWinners(counts) {
-  const max = Math.max(...Object.values(counts),0);
-  if(max === 0) return;
-  const winners = Object.keys(counts).filter(x => counts[x] === max);
-
-  document.querySelectorAll(".card").forEach(card => {
-    const label = card.querySelector(".label-link").dataset.label;
-    if(winners.includes(label)) {
-      card.classList.add("winner");
-      cardsEl.prepend(card);
-    }
-  });
-}
-
-
-/* ----------------------------------------------------------------------
-   🎮 Presenter Controls
----------------------------------------------------------------------- */
-document.getElementById("claimPresenter").onclick = ()=>{
-  const pw = prompt("Presenter-Passwort eingeben:");
-  if(pw === "teacher123"){  // change password here
-    presenterId = clientId;
-    updatePresenterUI();
+    updateVotesUI();
   }
-};
 
-document.getElementById("releasePresenter").onclick = ()=>{
-  presenterId = null;
-  updatePresenterUI();
-};
+  function updateVotesUI(){
+    const counts={};
+    Object.values(votes).forEach(v=>counts[v]=(counts[v]||0)+1);
 
-document.getElementById("startVoting").onclick = ()=>{
-  votingOpen = true;
-  updatePresenterUI();
-  updateUIFromVotes();
-};
+    document.querySelectorAll(".card").forEach(card=>{
+      const label=card.querySelector(".label-link").textContent;
+      const badge=card.querySelector(".vote-badge");
+      badge.textContent=counts[label]||0;
+      badge.style.display = voting ? "block" : "none";
+      card.classList.remove("winner");
+    });
 
-document.getElementById("showResults").onclick = ()=>{
-  votingOpen = false;
-  updatePresenterUI();
-  updateUIFromVotes();
-};
+    if(!voting && Object.keys(counts).length>0){
+      const max=Math.max(...Object.values(counts));
+      document.querySelectorAll(".card").forEach(card=>{
+        const label=card.querySelector(".label-link").textContent;
+        if(counts[label]===max) cardsEl.prepend(card),card.classList.add("winner");
+      });
+    }
+  }
 
-document.getElementById("nextProblem").onclick = ()=>{
-  votes = {};
-  set(ref(db, `/rooms/${room}/votes`), {});
-  currentIdx = (currentIdx + 1) % scenarios.length;
-  renderScenario(currentIdx);
-};
+  document.getElementById("claimPresenter").onclick=()=>{
+    const pw=prompt("Passwort:");
+    if(pw==="teacher123"){ presenter=clientId; toggleControls(); }
+  };
 
+  document.getElementById("releasePresenter").onclick=()=>{
+    presenter=null; toggleControls();
+  };
 
-/* ----------------------------------------------------------------------
-   🔄 UI role hiding
----------------------------------------------------------------------- */
-function updatePresenterUI() {
-  const isPresenter = (presenterId === clientId);
-  document.getElementById("releasePresenter").style.display = isPresenter ? "inline-block":"none";
-  document.getElementById("startVoting").style.display     = isPresenter ? "inline-block":"none";
-  document.getElementById("showResults").style.display     = isPresenter ? "inline-block":"none";
-  document.getElementById("nextProblem").style.display     = isPresenter ? "inline-block":"none";
-}
+  document.getElementById("startVoting").onclick=()=>{
+    voting=true; toggleControls(); updateVotesUI();
+  };
 
+  document.getElementById("showResults").onclick=()=>{
+    voting=false; toggleControls(); updateVotesUI();
+  };
 
-/* ----------------------------------------------------------------------
-   🛰 Firebase Live Sync
----------------------------------------------------------------------- */
-onValue(ref(db, `/rooms/${room}/votes`), snap=>{
-  votes = snap.val() || {};
-  updateUIFromVotes();
-});
+  document.getElementById("nextProblem").onclick=()=>{
+    set(ref(db,`rooms/${room}/votes`),{});
+    votes={};
+    index=(index+1)%scenarios.length;
+    render(index);
+  };
 
+  function toggleControls(){
+    const isPresenter = presenter===clientId;
+    document.getElementById("releasePresenter").style.display=isPresenter?"inline-block":"none";
+    document.getElementById("startVoting").style.display=isPresenter?"inline-block":"none";
+    document.getElementById("showResults").style.display=isPresenter?"inline-block":"none";
+    document.getElementById("nextProblem").style.display=isPresenter?"inline-block":"none";
+  }
 
-/* ----------------------------------------------------------------------
-   🚀 Init
----------------------------------------------------------------------- */
-renderScenario(currentIdx);
+  onValue(ref(db,`rooms/${room}/votes`),snap=>{
+    votes=snap.val()||{};
+    updateVotesUI();
+  });
 
+  render(index);
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
