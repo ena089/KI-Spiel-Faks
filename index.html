@@ -79,28 +79,32 @@
   <div class="footer" aria-hidden="true">© Spiel — teile den Raum-Link privat mit deinen Teilnehmenden</div>
 </div>
 
-  <script type="module">
-  // Import the functions you need from the SDKs you need
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getDatabase } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+  import {
+    getDatabase,
+    ref,
+    onValue,
+    set,
+    update,
+    runTransaction,
+    serverTimestamp,
+    get
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-  // Your web app's Firebase configuration
+  // Firebase Konfiguration
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY", // This value is unique to your project and is found in Project settings > General.
-    authDomain: "ki-spiel-66537.firebaseapp.com",
-    databaseURL: "https://ki-spiel-66537-default-rtdb.firebaseio.com",
-    projectId: "ki-spiel-66537",
-    storageBucket: "ki-spiel-66537.firebasestorage.app",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // This value is unique to your project and is found in Project settings > General.
-    appId: "YOUR_APP_ID" // This value is unique to your app and is found in Project settings > General.
+    apiKey: "AIzaSyAaDK-oX9G-DXBRITymIo5SJiksoamOXCU",
+    authDomain: "ki-faks-spiel.firebaseapp.com",
+    databaseURL: "https://ki-faks-spiel-default-rtdb.firebaseio.com",
+    projectId: "ki-faks-spiel",
+    storageBucket: "ki-faks-spiel.firebasestorage.app",
+    messagingSenderId: "510028538504",
+    appId: "1:510028538504:web:2ad71ab74dc0c2682cf53d"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-
-  // Initialize Realtime Database and get a reference to the service
   const db = getDatabase(app);
-
 
   const KIs = [
     { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "https://www.microsoft.com" },
