@@ -341,10 +341,14 @@
   { label: "Envision AI", info: "Reduziert Barrieren für Sehbehinderte Menschen. Übersetzt Bilder in Texte", url: "https://www.letsenvision.com/" },
   { label: "Analog", info: "Analoge Herangehensweisen: Kolleg:innen fragen, Bücher nutzen, Methoden aus Fachliteratur anwenden, im Team reflektieren.", url: null },
 ];
-  
+
   const htmlList = KIs.map(ki => {
-@@ -356,8 +358,41 @@ <h2 id="problemTitle">Problem</h2>
-    },
+  const content = ki.url
+    ? `<a href="${ki.url}" target="_blank" title="${ki.info}">${ki.label}</a>`
+    : `<span title="${ki.info}">${ki.label}</span>`;
+  return `<li>${content}</li>`;
+}).join("\n");
+  const scenarios = [
    {
       title:"Du arbeitest in einem Walkindergarten. Jedes Jahr erstellen die Kinder ein Buch mit getrockneten Blättern, Blumen und weiteren Pflanzen. Meist sind es Blätter die du kennst. Mick (5 Jahre) frägt dich diesmal bei einer Pflanze die du nicht kennst nach ihrem Namen.",
       options:["Analog","ChatGPT","Microsoft Copilot","DeepL Write"]
@@ -383,27 +387,7 @@
     },
     // vorhandenes oder ähnliches Szenario (falls gewünscht)
   ];
-];
-  const htmlList = KIs.map(ki => {
-  const content = ki.url
-    ? `<a href="${ki.url}" target="_blank" title="${ki.info}">${ki.label}</a>`
-    : `<span title="${ki.info}">${ki.label}</span>`;
-  return `<li>${content}</li>`;
-}).join("\n");
-  const scenarios = [
-    {
-      title:"In deiner Kindergruppe habt ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen, welche speziell auf die Altersgruppe zugeschnitten ist. Welche Herangehensweise planst du?",
-      options:["Analog","ChatGPT","Microsoft Copilot","DeepL Write"]
-    },
-    {
-      title:"In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schubindlied mit ihnen machen, welches die Bewegung erklärt und untermalt. Wie gehst du vor?",
-      options:["Analog","Muzify","ChatGPT","Poem Portraits"]
-    },
-   {
-      title:"Du arbeitest in einem Walkindergarten. Jedes Jahr erstellen die Kinder ein Buch mit getrockneten Blättern, Blumen und weiteren Pflanzen. Meist sind es Blätter die du kennst. Mick (5 Jahre) frägt dich diesmal bei einer Pflanze die du nicht kennst nach ihrem Namen.",
-      options:["Analog","ChatGPT","Microsoft Copilot","DeepL Write"]
-    },
-  ];
+
 
   // helpers: room id in URL (link still contains ?room=ID but kept hidden in UI)
   function qs(name){ const params = new URLSearchParams(window.location.search); return params.get(name); }
