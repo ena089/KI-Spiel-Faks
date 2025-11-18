@@ -3,100 +3,189 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Flashcard Spiel — Pädagogik & KI (Realtime)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Flashcard Spiel — Pädagogik & KI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
+  :root {
     --bg:#f5f8fb;
-    --card-front:#e8f6ff;
-    --card-back:#ffffff;
+    --card-front:#e7f4ff;
+    --card-back:#fff;
     --accent:#0066cc;
-    --muted:#6b7280;
-    --winner-bg: #fff59d;
+    --winner-bg:#ffeb3b;
   }
-  html,body{height:100%;}
-  body{
+
+  body {
     margin:0;
-    font-family:'Inter',system-ui,Segoe UI,Roboto,Arial;
-    background: linear-gradient(180deg,var(--bg),#eef6fb);
-    color:#0f172a;
+    font-family:'Inter',sans-serif;
+    background:linear-gradient(180deg,var(--bg),#eef6fb);
+    padding:18px;
     display:flex;
     justify-content:center;
-    padding:20px;
   }
-  .app{
+
+  .app {
     width:100%;
     max-width:1100px;
-    background:rgba(255,255,255,0.95);
+    background:rgba(255,255,255,.95);
+    padding:16px;
     border-radius:12px;
-    padding:18px;
-    box-shadow:0 8px 30px rgba(2,6,23,0.08);
+    box-shadow:0 8px 30px rgba(2,6,23,.08);
   }
 
-  /* Presenter controls */
-  .controls{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px}
-  .controls button{padding:8px 10px;border-radius:8px;border:none;cursor:pointer;background:#0066cc;color:#fff}
-  .controls .ghost{background:#eee;color:#222}
-
-  /* situation */
-  .situation{background:#fff;padding:14px;border-radius:10px;margin-bottom:12px;font-weight:600}
-
-  /* cards layout */
-  .cards{display:flex;gap:14px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px}
-  .card{width:240px;flex:0 0 240px;height:180px;perspective:1000px;position:relative}
-  .card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .6s}
-  .card.flipped .card-inner{transform:rotateY(180deg)}
-  .card-face{position:absolute;inset:0;border-radius:10px;padding:12px;box-sizing:border-box;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .card-front{background:var(--card-front);border:1px solid rgba(0,0,0,0.06)}
-  .card-back{background:var(--card-back);transform:rotateY(180deg);border:1px solid rgba(0,0,0,0.08);text-align:left;font-size:13px}
-
-  .label-link{font-weight:700;color:var(--accent);text-decoration:none}
-  .label-link:hover{text-decoration:underline}
-
-  .vote-badge{position:absolute;top:8px;left:8px;background:#fff;border-radius:8px;padding:4px 8px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-  .fav-btn{position:absolute;top:8px;right:8px;background:transparent;border:none;font-size:18px;cursor:pointer}
-
-  .back .info{font-size:13px;color:#222}
-  .back a{display:inline-block;margin-top:10px;color:var(--accent);text-decoration:none;font-weight:600}
-  .back a:hover{text-decoration:underline}
-
-  /* winner animation */
-  .winner{background:var(--winner-bg) !important;animation:shake .9s ease-in-out both}
-  @keyframes shake{
-    0%{transform:translateY(0)}
-    25%{transform:translateY(-6px)}
-    50%{transform:translateY(0)}
-    75%{transform:translateY(-4px)}
-    100%{transform:translateY(0)}
+  /* Top presenter control bar */
+  .controls {
+    display:flex;
+    justify-content:flex-end;
+    gap:6px;
+    margin-bottom:14px;
+  }
+  .controls button {
+    background:#0066cc;
+    color:white;
+    border:none;
+    border-radius:8px;
+    padding:7px 10px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .controls button.ghost {
+    background:#eaeaea;
+    color:#1d1d1d;
   }
 
-  /* presenter-only badges visible */
-  .vote-badge.show{display:block}
-  .vote-badge{display:none}
+  /* Situation box */
+  .situation {
+    background:white;
+    border-radius:10px;
+    padding:14px;
+    font-weight:600;
+    margin-bottom:14px;
+  }
 
-  /* small helpers */
-  .note{font-size:13px;color:var(--muted);margin-top:8px}
+  /* Cards layout */
+  .cards {
+    display:flex;
+    gap:12px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+  }
+
+  .card {
+    width:240px;
+    height:180px;
+    flex:0 0 240px;
+    border-radius:10px;
+    perspective:1000px;
+    position:relative;
+    transition:transform .5s ease;
+  }
+
+  .card-inner {
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform .6s;
+  }
+
+  .card.flipped .card-inner {
+    transform:rotateY(180deg);
+  }
+
+  .card-face {
+    position:absolute;
+    inset:0;
+    padding:12px;
+    border-radius:10px;
+    backface-visibility:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+  }
+
+  .card-front {
+    background:var(--card-front);
+    border:1px solid rgba(0,0,0,0.06);
+  }
+
+  .card-back {
+    background:var(--card-back);
+    border:1px solid rgba(0,0,0,0.08);
+    transform:rotateY(180deg);
+    font-size:13px;
+    text-align:left;
+  }
+
+  .label-link {
+    font-weight:700;
+    color:var(--accent);
+    text-decoration:none;
+    font-size:18px;
+  }
+
+  .vote-badge {
+    position:absolute;
+    top:8px; left:8px;
+    background:white;
+    padding:4px 8px;
+    border-radius:8px;
+    font-weight:700;
+    display:none;
+  }
+
+  .fav-btn {
+    position:absolute;
+    top:8px;
+    right:8px;
+    background:transparent;
+    font-size:18px;
+    border:none;
+    cursor:pointer;
+  }
+
+  /* Winner mega effect */
+  .card.winner {
+    background:var(--winner-bg)!important;
+    transform:rotate(-10deg) scale(1.15);
+    border:4px solid gold;
+    transition:transform .5s, background .4s;
+    z-index:10;
+  }
+
+  #note {
+    margin-top:18px;
+    font-size:14px;
+    text-align:center;
+    color:#444;
+  }
 </style>
 </head>
 <body>
-<div class="app" role="application">
+<div class="app">
 
-  <div class="controls" role="toolbar" aria-label="Presenter controls">
-    <button id="claimPresenter" class="">Presenter anmelden</button>
+  <div class="controls">
+    <button id="claimPresenter">Presenter anmelden</button>
     <button id="releasePresenter" class="ghost" style="display:none">Presenter freigeben</button>
-    <button id="startVoting" class="ghost" style="display:none">Start Voting</button>
-    <button id="showResults" class="ghost" style="display:none">Ergebnisse</button>
+    <button id="startVoting" class="ghost" style="display:none">Voting starten</button>
+    <button id="showResults" class="ghost" style="display:none">Ergebnisse zeigen</button>
     <button id="nextProblem" class="ghost" style="display:none">Nächstes Problem</button>
   </div>
 
-  <div id="situation" class="situation" aria-live="polite"></div>
+  <div id="situation" class="situation"></div>
+  <div id="cards" class="cards"></div>
+  <div id="note">Bitte wählt auf eurem Gerät *eine* Karte.</div>
 
-  <div id="cards" class="cards" role="list"></div>
-
-  <div id="note" class="note">Bitte wählt auf eurem Gerät *eine* Karte als Favorit. Eure Stimme wird gezählt.</div>
 </div>
 
-<!-- Firebase -->
+
+<!-- Firebase + Realtime Sync -->
+<script type="module">
+  
+  <!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import {
@@ -114,594 +203,192 @@
   };
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-
-  // KI-Liste (gekürzt / wie in deinem Datensatz)
-  const KIs = [
-  {label:"Microsoft Copilot", info:"In MS-Programme integrierter Assistent. Schreibt, fasst zusammen, erstellt Dokumente.", url:"https://www.microsoft.com"},
-  {label:"ChatGPT", info:"KI zum Schreiben, Erklären, Planen, Ideen entwickeln – mehrsprachig.", url:"https://chat.openai.com"},
-  {label:"Notion AI", info:"Schreibt, sortiert und strukturiert Notizen & Inhalte.", url:"https://www.notion.so"},
-  {label:"Grammarly", info:"Verbessert englische Texte: Grammatik, Stil, Struktur.", url:"https://www.grammarly.com"},
-  {label:"LanguageTool", info:"Deutsche Grammatik- und Stilprüfung.", url:"https://languagetool.org"},
-  {label:"Canva Magic Studio", info:"Erstellt automatisch Designs wie Plakate, Aushänge und Elterninfos.", url:"https://www.canva.com"},
-  {label:"Adobe Firefly", info:"Kreative KI für Bildbearbeitung.", url:"https://firefly.adobe.com"},
-  {label:"Bing Image Creator", info:"Kostenloser KI-Bildgenerator (DALL·E-Technologie).", url:"https://www.bing.com/create"},
-  {label:"DALL·E 3", info:"Erzeugt hochwertige Illustrationen, Comics und Kinderbilder.", url:"https://chat.openai.com"},
-  {label:"Soundraw", info:"Erstellt Musik & Sounds nach Stimmung.", url:"https://soundraw.io"},
-  {label:"Mubert", info:"Endlose, lizenzfreie KI-Musik.", url:"https://mubert.com"},
-  {label:"AIVA", info:"Komponiert Musik für Projekte & Theater.", url:"https://www.aiva.ai"},
-  {label:"Scribble Diffusion", info:"Wandelt Kinderkritzeleien in Illustrationen um.", url:"https://scribblediffusion.com"},
-  {label:"AutoDraw", info:"Erkennt Skizzen & wandelt sie in Symbole um.", url:"https://www.autodraw.com"},
-  {label:"Gemini", info:"Google-KI erklärt Wissen & päd. Zusammenhänge.", url:"https://gemini.google.com"},
-  {label:"Claude", info:"Sehr reflektierte Text-KI, ideal für sensible Themen.", url:"https://claude.ai"},
-  {label:"Speechify", info:"Liest Texte realistisch vor.", url:"https://speechify.com"},
-  {label:"ElevenLabs", info:"Emotionale KI-Stimmen.", url:"https://elevenlabs.io"},
-  {label:"TTSReader", info:"Kostenloses Vorlesen ohne Anmeldung.", url:"https://ttsreader.com"},
-  {label:"Quizlet", info:"Erstellt automatisch Lernkarten & Quiz.", url:"https://quizlet.com"},
-  {label:"Kahoot!", info:"Quiz für Gruppen & Workshops.", url:"https://kahoot.com"},
-  {label:"Educandy", info:"Einfache Lernspiele, kinderleicht gemacht.", url:"https://www.educandy.com"},
-  {label:"Lumi Education (H5P)", info:"Interaktive Lerninhalte, offline nutzbar.", url:"https://lumi.education"},
-  {label:"DeepL Translate", info:"Sehr präziser Übersetzer.", url:"https://www.deepl.com"},
-  {label:"DeepL Write", info:"Verbessert Stil & Textqualität.", url:"https://www.deepl.com/write"},
-  {label:"Canva Magic Write", info:"Text-KI in Canva.", url:"https://www.canva.com"},
-  {label:"Perplexity", info:"KI-Suchmaschine mit Quellenangaben.", url:"https://perplexity.ai"},
-  {label:"Elicit", info:"Fasst wissenschaftliche Studien zusammen.", url:"https://elicit.org"},
-  {label:"Askify", info:"Fasst YouTube-Videos automatisch zusammen.", url:"https://www.askify.ai"},
-  {label:"Glasp", info:"Markiert & fasst Texte & Videos zusammen.", url:"https://glasp.co"},
-  {label:"Teachable Machine", info:"Kinder erstellen eigene KI-Modelle.", url:"https://teachablemachine.withgoogle.com"},
-  {label:"Poem Portraits", info:"Kreative Poesie-KI.", url:"https://artsexperiments.withgoogle.com/poemportraits"},
-  {label:"AI Duet", info:"Musik-KI reagiert auf gespielte Töne.", url:"https://experiments.withgoogle.com/ai/ai-duet"},
-  {label:"Runway ML", info:"Video-KI für Animationen & Clips.", url:"https://runwayml.com"},
-  {label:"Pika Labs", info:"KI-Video aus Text oder Bildern.", url:"https://pika.art"},
-  {label:"MyHeritage Deep Nostalgia", info:"Animiert alte Fotos.", url:"https://www.myheritage.de/deep-nostalgia"},
-  {label:"InVideo", info:"Erstellt Videos automatisch.", url:"https://invideo.io"},
-  {label:"Muzify", info:"Musik aus Text generieren.", url:"https://muzify.ai"},
-  {label:"QuizGecko", info:"Erstellt Quiz aus Texten & Webseiten.", url:"https://quizgecko.com"},
-  {label:"Suno", info:"Komplette Songs inkl. Gesang.", url:"https://suno.com"},
-  {label:"YouTube Transcript Tools", info:"Erstellt YouTube-Transkripte.", url:"https://chromewebstore.google.com"},
-  {label:"NextThreeBooks", info:"Bücherempfehlungen per KI.", url:"https://nextthreebooks.com"},
-  {label:"ConkerAI", info:"Quiz & Lernmaterialien.", url:"https://conker.ai"},
-  {label:"NotebookLM", info:"Analysiert PDFs, Notizen & Dokumente.", url:"https://notebooklm.google"},
-  {label: "Google Lens", info: "Bilderkennung durch Smartphone-Kamera. Erkennt Objekte, Texte, Pflanzen, Tiere und Sehenswürdigkeiten.", url: "https://lens.google.com"},
-];
-
-  // Szenarien (Beispielset; erweitere nach Bedarf)
-  const scenarios = [
+const scenarios = [
     {title:"In deiner Kindergruppe habt ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen welche speziell auf die dort ausgestellten Schiffe, Flugzeuge und Autos eingeht. Was kann dir dabei helfen die Führung zu buchen?", options:["ChatGPT","Microsoft Copilot","DeepL Write","Analog"]},
     {title:"Du arbeitest in einem Walkindergarten. Jedes Jahr erstellen die Kinder ein Buch mit getrockneten Blättern, Blumen und weiteren Pflanzen. Meist sind es Blätter die du kennst. Mick (5 Jahre) frägt dich diesmal bei einer Pflanze die du nicht kennst nach ihrem Namen.", options:["QuizGecko","Perplexity","Google Lense","Analog"]},
     {title:"Die Kinder wollen ein eigenes Bilderbuch. Du brauchst Illustrationen. Was probierst du?", options:["DALL·E 3","Canva Magic Studio","Notion AI","Analog"]},
+     {title:" Das traditionelle Wintertheatherstück welches die Hort Kinder (6-10 Jahre) jedes Jahr aufführen steht vor der Tür. Normalerweise wählen die Kinder eines von fünf Winterbüchern, welches du dann in ein Theaterstück umwandelst. Dieses Jahr hast du erst 3 Bücher, welche die Kinder noch nicht kennen. Dir sind die Ideen für neue Winterbücher ausgegangen.", options:["Poem Portraits","Canva Magic Studio","NextThreeBooks","Analog"]},   
     {title:"In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh-binde-lied mit den Kindern machen, welches die Bewegung erklärt und untermalt. Wie gehst du vor?", options:["Muzify","Suno","Soundraw","Analog"]}
   ];
 
-  // helpers: room + clientId
-  function qs(name){ const p=new URLSearchParams(window.location.search); return p.get(name); }
-  function setQs(name,val){ const url=new URL(window.location.href); url.searchParams.set(name,val); window.history.replaceState({},'',url); }
-  function makeId(n=6){ const chars='abcdefghijklmnopqrstuvwxyz0123456789'; let s=''; for(let i=0;i<n;i++) s+=chars[Math.floor(Math.random()*chars.length)]; return s; }
-
-  let room = qs('room');
-  if(!room){ room = makeId(8); setQs('room',room); }
-
-  const roomStateRef = ref(db, `/rooms/${room}/state`);
-  const roomVotesRef = ref(db, `/rooms/${room}/votes`);
-  const roomPresenterRef = ref(db, `/rooms/${room}/presenter`);
-
-  let clientId = localStorage.getItem('flash_clientId');
-  if(!clientId){ clientId = 'c_'+Date.now()+'_'+Math.floor(Math.random()*10000); localStorage.setItem('flash_clientId', clientId); }
-
-  // DOM
-  const situationEl = document.getElementById('situation');
-  const cardsEl = document.getElementById('cards');
-  const claimBtn = document.getElementById('claimPresenter');
-  const releaseBtn = document.getElementById('releasePresenter');
-  const startVotingBtn = document.getElementById('startVoting');
-  const showResultsBtn = document.getElementById('showResults');
-  const nextProblemBtn = document.getElementById('nextProblem');
-
-  // state
-  let currentIndex = 0;
-  let votes = {};
-  let presenterId = null;
-  let isPresenter = false;
-  let votingActive = false;
-  let resultsShown = false;
-
-  // UI: render scenario (cards)
-  function renderScenario(idx){
-    const s = scenarios[idx];
-    situationEl.textContent = s.title;
-    cardsEl.innerHTML = '';
-    const opts = s.options.slice(0,4);
-    // ensure exactly 4 with Analog as last
-    while(opts.length < 4) opts.push('Analog');
-    if(opts[3] !== 'Analog') {
-      if(!opts.includes('Analog')) opts[3] = 'Analog';
-    }
-
-    opts.forEach(label => {
-      const ki = KIs.find(k=>k.label===label) || {label:label, info:'(keine Info)', url:null};
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card-inner" tabindex="0" role="article">
-          <div class="card-face card-front">
-            <div class="vote-badge">0</div>
-            <button class="fav-btn" title="Als Favorit wählen" aria-label="Favorit">☆</button>
-            <div class="front-label"><a class="label-link" href="${ki.url || '#'}" target="_blank" rel="noopener" data-label="${ki.label}">${ki.label}</a></div>
-          </div>
-          <div class="card-face card-back">
-            <div class="info"><strong>${ki.label}</strong><div style="margin-top:8px">${ki.info}</div>
-              ${ki.url ? `<a href="${ki.url}" target="_blank" rel="noopener">🔗 Webseite</a>` : ''}
-            </div>
-          </div>
-        </div>
-      `;
-      // events
-      const inner = card.querySelector('.card-inner');
-      const favBtn = card.querySelector('.fav-btn');
-      const link = card.querySelector('.label-link');
-
-      // click toggles flip unless clicking favBtn or link
-      card.addEventListener('click', e => {
-        if(e.target === favBtn || e.target === link) return;
-        card.classList.toggle('flipped');
-      });
-
-      // stop propagation on link so it doesn't flip
-      link.addEventListener('click', e => e.stopPropagation());
-
-      favBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const currentVote = votes[clientId] || null;
-        const newVote = currentVote === ki.label ? null : ki.label;
-        try {
-          await set(ref(db, `/rooms/${room}/votes/${clientId}`), newVote);
-        } catch(err){ console.error('vote failed', err); }
-      });
-
-      cardsEl.appendChild(card);
-    });
-
-    updateUIFromVotes();
-    updateControls();
-  }
-
-  // apply votes counts to UI
-  function updateUIFromVotes(){
-    // counts
-    const counts = {};
-    Object.values(votes || {}).forEach(v => { if(v) counts[v]=(counts[v]||0)+1; });
-    // set badges and fav states
-    document.querySelectorAll('.card').forEach(card => {
-      const labelEl = card.querySelector('.label-link');
-      const label = labelEl ? labelEl.dataset.label : null;
-      const badge = card.querySelector('.vote-badge');
-      const favBtn = card.querySelector('.fav-btn');
-      if(label){
-        const n = counts[label]||0;
-        badge.textContent = n;
-        badge.style.display = (isPresenter && resultsShown) ? 'block' : 'none';
-        // fav state for this client
-        if(votes[clientId] === label){
-          favBtn.textContent = '★';
-          favBtn.style.color = '#f39c12';
-        } else {
-          favBtn.textContent = '☆';
-          favBtn.style.color = '';
-        }
-      }
-    });
-
-    if(isPresenter && resultsShown){
-      sortCardsByVotes(counts);
-      highlightWinners(counts);
-    } else {
-      restoreOrder();
-      clearWinnerHighlights();
-    }
-  }
-
-  // keep original order map for restore
-  function restoreOrder(){
-    const s = scenarios[currentIndex];
-    const labels = s.options.slice(0,4);
-    while(labels.length<4) labels.push('Analog');
-    const map = new Map();
-    document.querySelectorAll('.card').forEach(card=>{
-      const lab = card.querySelector('.label-link')?.dataset.label;
-      if(lab) map.set(lab, card);
-    });
-    labels.forEach(l => { const el = map.get(l); if(el) cardsEl.appendChild(el); });
-  }
-
-  function sortCardsByVotes(counts){
-    const cardEls = Array.from(cardsEl.children);
-    const beforeRects = new Map(cardEls.map(c=>[c,c.getBoundingClientRect()]));
-    const sorted = cardEls.sort((a,b)=>{
-      const la = a.querySelector('.label-link')?.dataset.label || '';
-      const lb = b.querySelector('.label-link')?.dataset.label || '';
-      const ca = counts[la]||0, cb = counts[lb]||0;
-      if(cb !== ca) return cb - ca;
-      return la.localeCompare(lb);
-    });
-    let already=true;
-    for(let i=0;i<sorted.length;i++){ if(sorted[i] !== cardEls[i]){ already=false; break; } }
-    if(already) return;
-    sorted.forEach(el=>cardsEl.appendChild(el));
-    sorted.forEach(c=>{
-      const before = beforeRects.get(c);
-      const after = c.getBoundingClientRect();
-      if(!before||!after) return;
-      const dx = before.left - after.left;
-      const dy = before.top - after.top;
-      c.style.transform = `translate(${dx}px, ${dy}px)`;
-      c.style.transition = 'transform .6s ease';
-      c.getBoundingClientRect();
-      requestAnimationFrame(()=>{ c.style.transform = ''; });
-      const onTrans = (ev)=>{ if(ev.propertyName==='transform'){ c.style.transition=''; c.removeEventListener('transitionend', onTrans); } };
-      c.addEventListener('transitionend', onTrans);
-    });
-  }
-
-  function highlightWinners(counts){
-    const max = Math.max(...Object.values(counts).concat(0));
-    if(max === 0) return;
-    const winners = Object.keys(counts).filter(l => counts[l] === max);
-    document.querySelectorAll('.card').forEach(card=>{
-      const lab = card.querySelector('.label-link')?.dataset.label;
-      if(winners.includes(lab)){
-        card.classList.add('winner');
-      } else {
-        card.classList.remove('winner');
-      }
-    });
-  }
-
-  function clearWinnerHighlights(){
-    document.querySelectorAll('.card').forEach(c=>c.classList.remove('winner'));
-  }
-
-  // presenter functions
-  const PRESENTER_PWD = "Geheim!";
-
-  async function claimPresenter(){
-    try{
-      await runTransaction(roomPresenterRef, current => {
-        if(current === null || current === clientId) return clientId;
-        return; // abort
-      });
-    }catch(e){ console.error(e); }
-  }
-
-  async function releasePresenter(){
-    try{
-      await runTransaction(roomPresenterRef, current => {
-        if(current === clientId) return null;
-        return;
-      });
-    }catch(e){ console.error(e); }
-  }
-
-  function updateControls(){
-    if(isPresenter){
-      claimBtn.style.display='none';
-      releaseBtn.style.display='inline-block';
-      startVotingBtn.style.display = votingActive ? 'none' : 'inline-block';
-      showResultsBtn.style.display = 'inline-block';
-      nextProblemBtn.style.display = 'inline-block';
-    } else {
-      claimBtn.style.display='inline-block';
-      releaseBtn.style.display='none';
-      startVotingBtn.style.display='none';
-      showResultsBtn.style.display='none';
-      nextProblemBtn.style.display='none';
-    }
-    // show/hide vote badges
-    document.querySelectorAll('.vote-badge').forEach(b=>{
-      b.style.display = (isPresenter && resultsShown) ? 'block' : 'none';
-    });
-  }
-
-  claimBtn.addEventListener('click', async ()=>{
-    const pwd = prompt('Presenter-Passwort eingeben:');
-    if(pwd === null) return;
-    if(pwd === PRESENTER_PWD){ await claimPresenter(); }
-    else alert('Falsches Passwort');
-  });
-
-  releaseBtn.addEventListener('click', async ()=>{
-    if(!confirm('Presenter freigeben?')) return;
-    await releasePresenter();
-  });
-
-  startVotingBtn.addEventListener('click', async ()=>{
-    if(!isPresenter) return;
-    votingActive = true;
-    resultsShown = false;
-    update(roomStateRef, { votingActive: true, currentIndex, updatedAt: serverTimestamp() }).catch(()=>{});
-    updateControls();
-  });
-
-  showResultsBtn.addEventListener('click', async ()=>{
-    if(!isPresenter) return;
-    resultsShown = !resultsShown;
-    votingActive = false;
-    update(roomStateRef, { votingActive: false, showResults: resultsShown, updatedAt: serverTimestamp() }).catch(()=>{});
-    updateControls();
-    applyVotesToUI(); // reflect immediately
-  });
-
-  nextProblemBtn.addEventListener('click', async ()=>{
-    if(!isPresenter) return;
-    resultsShown = false;
-    votingActive = false;
-    const newIndex = (currentIndex + 1) % scenarios.length;
-    update(roomStateRef, { currentIndex: newIndex, votingActive:false, showResults:false, updatedAt: serverTimestamp() }).catch(()=>{});
-    // reset votes for next problem
-    set(roomVotesRef, null).catch(()=>{});
-  });
-
-  // apply votes UI wrapper
-  function applyVotesToUI(){ updateUIFromVotes(); }
-
-  // realtime listeners
-  onValue(roomVotesRef, snap => {
-    votes = snap.val() || {};
-    applyVotesToUI();
-  });
-
-  onValue(roomStateRef, snap => {
-    const data = snap.val() || {};
-    currentIndex = Math.min(data.currentIndex ?? 0, scenarios.length-1);
-    votingActive = !!data.votingActive;
-    resultsShown = !!data.showResults;
-    renderScenario(currentIndex);
-  });
-
-  onValue(roomPresenterRef, snap => {
-    presenterId = snap.val();
-    isPresenter = presenterId === clientId;
-    updateControls();
-  });
-
-  // when leaving, release presenter if needed
-  window.addEventListener('beforeunload', async ()=>{
-    try{
-      const presSnap = await get(roomPresenterRef);
-      if(presSnap && presSnap.val() === clientId){
-        await runTransaction(roomPresenterRef, current => { if(current === clientId) return null; return; });
-      }
-    }catch(e){}
-  });
-
-  // initial bootstrap: ensure state exists
-  (async function bootstrap(){
-    const snap = await get(roomStateRef);
-    if(!snap.exists()){
-      set(roomStateRef, { currentIndex:0, votingActive:false, showResults:false, createdAt:serverTimestamp() }).catch(()=>{});
-    } else {
-      // trigger render from listener
-    }
-  })();
-
-  // small helper to call UI update
-  function updateUIFromVotesAndState(){ updateUIFromVotes(); updateControls(); }
-
-  // initial render
-  renderScenario(0);
-</script>
-</body>
-</html>
-
-
-
-
----alt
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KI Flashcards</title>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        margin: 0; padding: 20px;
-    }
-
-    .situation {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 25px;
-        background: white;
-        padding: 15px;
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-    }
-
-    .card-container {
-        display: flex;
-        gap: 20px;
-        flex-wrap: nowrap;
-    }
-
-    .card {
-        width: 260px;
-        height: 170px;
-        perspective: 1000px;
-        cursor: pointer;
-    }
-
-    .inner {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        transition: transform 0.6s;
-        transform-style: preserve-3d;
-    }
-
-    .card.flipped .inner {
-        transform: rotateY(180deg);
-    }
-
-    .side {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        padding: 15px;
-        border-radius: 10px;
-        backface-visibility: hidden;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        background: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
-
-    .back {
-        transform: rotateY(180deg);
-        font-size: 14px;
-    }
-
-    a {
-        color: #0066cc;
-        font-weight: bold;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-
-    #nav {
-        margin-top: 25px;
-        display: flex;
-        gap: 10px;
-    }
-
-    button {
-        padding: 10px 15px;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        background: #0066cc;
-        color: white;
-        font-size: 16px;
-    }
-</style>
-</head>
-<body>
-
-<div id="situationBox" class="situation"></div>
-<div id="cards" class="card-container"></div>
-
-<div id="nav">
-    <button onclick="prevScenario()">← Zurück</button>
-    <button onclick="nextScenario()">Weiter →</button>
-</div>
-
-<script>
-/* ==========================================================
-   KIs mit anklickbaren Titeln (als URL verknüpft)
-   ========================================================== */
-
-
-/* ==========================================================
-   SITUATIONEN – 10 Beispiele
-   ========================================================== */
-const scenarios = [
-  {
-    title:"Du planst einen Ausflug ins Deutsche Museum und möchtest eine Führung für Kinder buchen. Welche Herangehensweise wählst du?",
-    options:["ChatGPT","Perplexity","DeepL Translate","Analog"]
-  },
-  {
-    title:"Du musst ein Elternschreiben zum Thema Medienzeit formulieren. Es soll leicht verständlich und wertschätzend sein.",
-    options:["DeepL Write","LanguageTool","ChatGPT","Analog"]
-  },
-  {
-    title:"Die Kinder möchten ein eigenes Bilderbuch gestalten – du brauchst passende Illustrationen.",
-    options:["DALL·E 3","Adobe Firefly","Bing Image Creator","Scribble Diffusion"]
-  },
-  {
-    title:"Ihr möchtet im Hort ein Wissensquiz zum Thema Wasser durchführen.",
-    options:["Quizlet","Kahoot!","ConkerAI","Analog"]
-  },
-  {
-    title:"Du willst ein komplexes YouTube-Erklärvideo schnell verstehen.",
-    options:["Askify","Glasp","NotebookLM","Analog"]
-  },
-  {
-    title:"Für ein Theaterprojekt brauchst du stimmungsvolle Hintergrundmusik.",
-    options:["AIVA","Suno","Muzify","Analog"]
-  },
-  {
-    title:"Du möchtest mehrsprachige Eltern über ein Projekt informieren.",
-    options:["DeepL Translate","ChatGPT","LanguageTool","Analog"]
-  },
-  {
-    title:"Du planst einen Elternabend und willst ein schönes Poster erstellen.",
-    options:["Canva Magic Studio","Adobe Firefly","Canva Magic Write","Analog"]
-  },
-  {
-    title:"Die Kinder wollen ihre Geräusche im Raum aufnehmen und experimentell verarbeiten.",
-    options:["Teachable Machine","AI Duet","Soundraw","Analog"]
-  },
-  {
-    title:"Du brauchst für eine Präsentation wissenschaftliche Hintergrundinfos.",
-    options:["Perplexity","Elicit","Claude","Analog"]
-  }
+const KI_DATA = [
+  { label:"ChatGPT", info:"KI Sprachmodell für Texte & Ideen", url:"https://chat.openai.com" },
+  { label:"YouTube", info:"Videos & Tutorials zu allen Themen", url:"https://youtube.com" },
+  { label:"Google Lens", info:"Foto machen & KI analysiert Inhalte", url:"https://lens.google" },
+  { label:"Gemini", info:"Multimodale KI von Google", url:"https://gemini.google.com" },
+  { label:"Analog", info:"Fragen, Bücher, Freunde, eigene Ideen", url:null }
 ];
 
-let current = 0;
 
-/* ==========================================================
-   Szenario laden
-   ========================================================== */
-function loadScenario(i = 0) {
-    const s = scenarios[i];
-    document.getElementById("situationBox").innerText = s.title;
 
-    const container = document.getElementById("cards");
-    container.innerHTML = "";
+const room      = "klasse01";
+let clientId    = "user-" + Math.random().toString(36).substring(2,9);
+let presenterId = null;
+let currentIdx  = 0;
+let votes       = {};
+let votingOpen  = false;
 
-    s.options.forEach(opt => {
-        const ki = KIs.find(k => k.label === opt);
+/* DOM */
+const situationEl = document.getElementById("situation");
+const cardsEl     = document.getElementById("cards");
+const noteEl      = document.getElementById("note");
 
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-            <div class="inner">
-                <div class="side front">
-                    <a href="${ki.url}" target="_blank">${ki.label}</a>
-                </div>
-                <div class="side back">
-                    <div>
-                        <a href="${ki.url}" target="_blank">${ki.label}</a><br><br>
-                        ${ki.info}
-                    </div>
-                </div>
-            </div>
-        `;
-        card.addEventListener("click", () => card.classList.toggle("flipped"));
-        container.appendChild(card);
+
+/* ----------------------------------------------------------------------
+   🚀 Render Scenario & Cards — ALWAYS 4 cards
+---------------------------------------------------------------------- */
+function renderScenario(index) {
+  const s = scenarios[index];
+  situationEl.textContent = s.title;
+  cardsEl.innerHTML = "";
+
+  // Guarantee 4 cards, fill with Analog if needed
+  const optionList = [...s.options];
+  while(optionList.length < 4) optionList.push("Analog");
+
+  optionList.forEach(label => {
+    const ki = KI_DATA.find(x => x.label.toLowerCase() === label.toLowerCase()) || 
+              { label, info:"Keine Info vorhanden", url:null };
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <div class="vote-badge">0</div>
+          <button class="fav-btn">☆</button>
+          <a class="label-link" data-label="${ki.label}" 
+             href="${ki.url || '#'}" target="_blank">${ki.label}</a>
+        </div>
+        <div class="card-face card-back">
+          <b>${ki.label}</b><br>${ki.info}<br>
+          ${ki.url ? `<a href="${ki.url}" target="_blank">Mehr erfahren</a>` : ""}
+        </div>
+      </div>
+    `;
+
+    // Flip on click
+    card.addEventListener("click", e => {
+      if(e.target.classList.contains("fav-btn")) return;
+      card.classList.toggle("flipped");
     });
+
+    // Voting star click
+    card.querySelector(".fav-btn").addEventListener("click", async e => {
+      e.stopPropagation();
+      const newChoice = (votes[clientId] === ki.label ? null : ki.label);
+      await set(ref(db, `/rooms/${room}/votes/${clientId}`), newChoice);
+    });
+
+    cardsEl.appendChild(card);
+  });
+
+  updateUIFromVotes();
 }
 
-/* Navigation */
-function nextScenario() {
-    current = (current + 1) % scenarios.length;
-    loadScenario(current);
-}
-function prevScenario() {
-    current = (current - 1 + scenarios.length) % scenarios.length;
-    loadScenario(current);
+
+/* ----------------------------------------------------------------------
+   🧮 Tally + Winner Highlight
+---------------------------------------------------------------------- */
+function updateUIFromVotes() {
+  const counts = {};
+  Object.values(votes).forEach(v => { if(v) counts[v] = (counts[v]||0) + 1 });
+
+  document.querySelectorAll(".card").forEach(card=>{
+    const label = card.querySelector(".label-link").dataset.label;
+    const badge = card.querySelector(".vote-badge");
+    const count = counts[label] || 0;
+
+    badge.textContent = count;
+    badge.style.display = votingOpen ? "block" : "none";
+    card.classList.remove("winner");
+  });
+
+  if(!votingOpen && Object.values(counts).length > 0) highlightWinners(counts);
 }
 
-loadScenario(0);
+function highlightWinners(counts) {
+  const max = Math.max(...Object.values(counts),0);
+  if(max === 0) return;
+  const winners = Object.keys(counts).filter(x => counts[x] === max);
+
+  document.querySelectorAll(".card").forEach(card => {
+    const label = card.querySelector(".label-link").dataset.label;
+    if(winners.includes(label)) {
+      card.classList.add("winner");
+      cardsEl.prepend(card);
+    }
+  });
+}
+
+
+/* ----------------------------------------------------------------------
+   🎮 Presenter Controls
+---------------------------------------------------------------------- */
+document.getElementById("claimPresenter").onclick = ()=>{
+  const pw = prompt("Presenter-Passwort eingeben:");
+  if(pw === "teacher123"){  // change password here
+    presenterId = clientId;
+    updatePresenterUI();
+  }
+};
+
+document.getElementById("releasePresenter").onclick = ()=>{
+  presenterId = null;
+  updatePresenterUI();
+};
+
+document.getElementById("startVoting").onclick = ()=>{
+  votingOpen = true;
+  updatePresenterUI();
+  updateUIFromVotes();
+};
+
+document.getElementById("showResults").onclick = ()=>{
+  votingOpen = false;
+  updatePresenterUI();
+  updateUIFromVotes();
+};
+
+document.getElementById("nextProblem").onclick = ()=>{
+  votes = {};
+  set(ref(db, `/rooms/${room}/votes`), {});
+  currentIdx = (currentIdx + 1) % scenarios.length;
+  renderScenario(currentIdx);
+};
+
+
+/* ----------------------------------------------------------------------
+   🔄 UI role hiding
+---------------------------------------------------------------------- */
+function updatePresenterUI() {
+  const isPresenter = (presenterId === clientId);
+  document.getElementById("releasePresenter").style.display = isPresenter ? "inline-block":"none";
+  document.getElementById("startVoting").style.display     = isPresenter ? "inline-block":"none";
+  document.getElementById("showResults").style.display     = isPresenter ? "inline-block":"none";
+  document.getElementById("nextProblem").style.display     = isPresenter ? "inline-block":"none";
+}
+
+
+/* ----------------------------------------------------------------------
+   🛰 Firebase Live Sync
+---------------------------------------------------------------------- */
+onValue(ref(db, `/rooms/${room}/votes`), snap=>{
+  votes = snap.val() || {};
+  updateUIFromVotes();
+});
+
+
+/* ----------------------------------------------------------------------
+   🚀 Init
+---------------------------------------------------------------------- */
+renderScenario(currentIdx);
+
 </script>
-
 </body>
 </html>
+
+
 
 
 
