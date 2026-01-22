@@ -350,7 +350,7 @@
 
   // ---- fixed: KIs must be a flat, valid array of objects (no syntax errors)
   const KIs = [
-    { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "https://www.microsoft.com" },
+    { label: "Microsoft Copilot", info: "In Microsoft-Programme integrierter KI-Assistent. Schreibt Inhalte, fasst Mails zusammen und erstellt Dokumente. Nutzung mit Microsoft 365 Lizenz.", url: "http[...]" },
     { label: "ChatGPT", info: "Wohl bekannteste KI, ist ein Large Langage Model.", url: "https://chat.openai.com" },
     { label: "Notion AI", info: "KI in Notion zum Strukturieren, Sortieren und Schreiben von Notizen und Dokumenten.", url: "https://www.notion.so" },
     { label: "Grammarly", info: "KI für englische Texte. Prüft Grammatik, Rechtschreibung und Stil.", url: "https://www.grammarly.com" },
@@ -409,19 +409,19 @@
   // A set of clean, valid scenarios. Each options array should reference labels present in KIs (or use "Analog").
   const scenarios = [
     {
-      title: "In deiner Kindergartengruppe bearbeitet ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen, die altersgerecht ist.",
+      title: "In deiner Kindergartengruppe bearbeitet ihr aktuell das Thema Transportmittel. Du möchtest mit den Kindern einen Ausflug ins Deutsche Museum machen und eine Führung buchen, die altersg[...]",
       options: ["Analog","ChatGPT","Microsoft Copilot","Perplexity"]
     },
     {
-      title: "Du arbeitest in einer Elterninitiative. Seit mehreren Monaten gibt es ein Konflikt zwischen einem Vater und einer Kollegin. Dieser ist nicht einverstanden mit den Projekten, welche vorgestellt wurden.",
+      title: "Du arbeitest in einer Elterninitiative. Seit mehreren Monaten gibt es ein Konflikt zwischen einem Vater und einer Kollegin. Dieser ist nicht einverstanden mit den Projekten, welche vorge[...]",
       options: ["Analog","ChatGPT","Runway ML","Educandy"]
     },
     {
-      title: "In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh‑binde‑Lied mit den Kindern entwickeln, das die Bewegungsabfolge erklärt und musikalisch unterstützt.",
+      title: "In deiner Vorschulgruppe lernen die Kinder aktuell Schuhe binden. Du möchtest ein Schuh‑binde‑Lied mit den Kindern entwickeln, das die Bewegungsabfolge erklärt und musikalisch unte[...]",
       options: ["Analog","AI Duet","AIVA","Suno"]
     },
     {
-      title: "Du arbeitest in einem Waldkindergarten. Jedes Jahr erstellen die Kinder ein Herbarium mit getrockneten Blättern und Blumen. Mark (5 J.) fragt dich nach dem Namen einer dir unbekannten Pflanze.",
+      title: "Du arbeitest in einem Waldkindergarten. Jedes Jahr erstellen die Kinder ein Herbarium mit getrockneten Blättern und Blumen. Mark (5 J.) fragt dich nach dem Namen einer dir unbekannten P[...]",
       options: ["Analog","Google Lense","Gemini","Perplexity"]
     },
     {
@@ -437,19 +437,19 @@
       options: ["Analog","NextThreeBooks","Speechify","TTSReader"]
     },
     {
-      title: "Du bist Erzieher:in in einem deutsch‑französischen Kindergarten. Einige Eltern sprechen nur Französisch, andere nur Deutsch. Du willst ein Info‑Blatt über das neue Bastelprojekt erstellen.",
+      title: "Du bist Erzieher:in in einem deutsch‑französischen Kindergarten. Einige Eltern sprechen nur Französisch, andere nur Deutsch. Du willst ein Info‑Blatt über das neue Bastelprojekt e[...]",
       options: ["Analog","DeepL Translate","DeepL Write","Envision AI"]
     },
     {
-      title: "Du willst eine kurze Umfrage an die Eltern schicken, um Feedback zu einem neuen Projekt zu sammeln. Das Feedback sollte anonym sein und sowohl offene als auch geschlossene Fragen enthalten.",
+      title: "Du willst eine kurze Umfrage an die Eltern schicken, um Feedback zu einem neuen Projekt zu sammeln. Das Feedback sollte anonym sein und sowohl offene als auch geschlossene Fragen enthalt[...]",
       options: ["Analog","ChatGPT","Microsoft Copilot","ConkerAI"]
     },
     {
-      title: "Du möchtest für die kommende Elternversammlung einen ansprechenden Aushang erstellen, der die wichtigsten Infos zur Anmeldung, Uhrzeiten und Themen enthält und leicht gedruckt werden kann.",
+      title: "Du möchtest für die kommende Elternversammlung einen ansprechenden Aushang erstellen, der die wichtigsten Infos zur Anmeldung, Uhrzeiten und Themen enthält und leicht gedruckt werden [...]",
       options: ["Analog","Canva Magic Studio","DALL·E 3","AutoDraw"]
     },
     {
-      title: "Ihr wollt aus den Erzählungen der Kinder Quizaufgaben erstellen. Welche Tools können dabei unterstützen, passende Fragen automatisch zu generieren und unterschiedliche Schwierigkeitsstufen anzubieten?",
+      title: "Ihr wollt aus den Erzählungen der Kinder Quizaufgaben erstellen. Welche Tools können dabei unterstützen, passende Fragen automatisch zu generieren und unterschiedliche Schwierigkeitss[...]",
       options: ["Analog","Quizlet","QuizGecko","ChatGPT"]
     },
     {
